@@ -7,7 +7,7 @@ var barChartData = {
 		datasets: [{
 				label: "$0 Contributions",
 				borderColor: "#04275e",
-				backgroundColor: "#4180e2",
+				backgroundColor: "#0306ad",
 				borderWidth: 1,
 				data: [ 20,12,11,6,5,1],
 			}, {
