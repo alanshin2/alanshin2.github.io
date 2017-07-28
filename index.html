@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.js"></script>
+	</head>
+	
+	<body>
+		<div class="content">Content
+			<section id="chart">
+				<p>chart section!</p>
+				Principal: </br><input type="text" id="principal_input" name="Principal" value="30000" oninput="updateChart()"></br>
+				Interest: </br><input type="text" id="interest_input" name="Interest" value="6"oninput="updateChart()"></br>
+				Time: </br><input type="text" id="time_input" name="Time" value="21"oninput="updateChart()"></br>
+				Contributions/month: </br><input type="text" id="cont_input" name="Contribution" value="100"oninput="updateChart()"></br>
+				<div style="width:50%;">
+					<canvas id="myChart"></canvas>
+			</section>
+		</div>
+	</body>
+	
+</html>
