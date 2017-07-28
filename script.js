@@ -22,7 +22,7 @@ var barChartData = {
 		responsive: true,
 		title:{
 			display:true,
-			text: "loan benefit"
+			text: "Loan Benefit Visualization"
 		},
 		legend: {
 			position: 'top',
