@@ -80,7 +80,7 @@ function calculateLoan(p,i,t,m,c)
 					p = new Big(p.minus((y).minus(x)));
 					totalInterest = totalInterest.plus( (m.plus(c)) );
 					count++;
-					//console.log("Month #" + count + " Principal: "+p.valueOf() +"in loop");
+					console.log("Month #" + count + " Principal: "+p.valueOf() +"in loop");
 					if(count%11 == 0)
 						withCont.push(p.valueOf());
 				}	
@@ -92,14 +92,14 @@ function calculateLoan(p,i,t,m,c)
 			x = new Big( (p.times(i)).div(12) );
 			p = new Big((p).minus( (m).minus(x)));
 			if( p < 0 )
-			{
+			{0
 				p = new Big(0);
 			}
 			if(count%11 == 0)
 				withCont.push(p.valueOf());
 			totalInterest = totalInterest.plus(m);
 			count++;
-			//console.log("Month #" + count + " Principal: "+p.valueOf());
+			console.log("Month #" + count + " Principal: "+p.valueOf());
 		}	
 	}
 	totalInterest = totalInterest.minus(pTemp);
@@ -113,6 +113,15 @@ function calculateLoan(p,i,t,m,c)
 	console.log("Interest paid = " + totalInterest.valueOf());
 	console.log("Cost of Loan = " + costOfLoan.valueOf());
 	console.log("Employee cost = " + employeeCost.valueOf());
+	
+	// var woTotalInterest = (m.times((t.times(12)))).minus(pTemp);
+	// var woCostOfLoan = (m.times((t.times(12))));
+	// var woEmployee = (m.times((t.times(12))));
+	// var woCount = (t.times(12));
+	// var woTime = 0;
+	// var timeSaved = ""+Math.round(((t.times(12)).minus(count)).div(12)) + " yr(s)" + (((t.times(12)).minus(count)).div(12)).mod(12).toFixed(0) + " month(s)";
+	// var arr = [ pTemp, totalInterest, costOfLoan, employeeCost, count, timeSaved];
+	// insertToTable(arr);
 	
 	//remove the labels and datas
 	barChartData.data.labels.splice(0, barChartData.data.labels.length);
@@ -144,6 +153,20 @@ function calculateLoan(p,i,t,m,c)
 	new Chart(ctx, barChartData);
 }
 
+function insertToTable(array)
+{
+	var table = document.getElementById('chartTable');
+	for( i = 0; i <= array.length; i++)
+	{
+		if(i == 4)
+			table.rows[2].cells[i+1].innerHTML = array[i];
+		else if(i == 5)
+			table.rows[2].cells[i+1].innerHTML = array[i];
+		else
+			table.rows[2].cells[i+1].innerHTML = ("$" + Math.round(array[i]));
+	}
+}
+
 function calcWithoutCont(m,t,i,p)
 {
 	var res = [];
@@ -154,7 +177,6 @@ function calcWithoutCont(m,t,i,p)
 		p = new Big((p).minus( (m).minus(x))); 
 		if(k % 11 == 0)
 		{
-			console.log("K = " + k);
 			res.push(p.valueOf());
 		}
 	}
