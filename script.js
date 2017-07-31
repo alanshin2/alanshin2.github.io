@@ -43,15 +43,16 @@ function updateChart()
 	if ( t.valueOf() == 0 )
 		t = new Big(1);
 	c = new Big(document.getElementById("cont_input").value);
+	cc = new Big(document.getElementById("cap_input").value);
 	i = i.div(100);
 	
 	m = new Big(calculateMonthly(p, i ,t));
 	//console.log((m.times(120)).valueOf());
-	calculateLoan(p,i,t,m,c);
+	calculateLoan(p,i,t,m,c,cc);
 	
 }
 
-function calculateLoan(p,i,t,m,c)
+function calculateLoan(p,i,t,m,c,cc)
 {
 	var withCont=[];
 	totalInterest = new Big(0);
@@ -66,11 +67,11 @@ function calculateLoan(p,i,t,m,c)
 	{
 		if( run == true )
 		{
-			for(j = 0; j < 60; j++)
+			for(j = 0; j < (cc/c); j++)
 			{
 				if( p.valueOf() < 0)
 				{
-					j = 60;
+					break;
 					
 				}
 				else
@@ -80,7 +81,7 @@ function calculateLoan(p,i,t,m,c)
 					p = new Big(p.minus((y).minus(x)));
 					totalInterest = totalInterest.plus( (m.plus(c)) );
 					count++;
-					console.log("Month #" + count + " Principal: "+p.valueOf() +"in loop");
+					//console.log("Month #" + count + " Principal: "+p.valueOf() +"in loop");
 					if(count%11 == 0)
 						withCont.push(p.valueOf());
 				}	
@@ -99,7 +100,7 @@ function calculateLoan(p,i,t,m,c)
 				withCont.push(p.valueOf());
 			totalInterest = totalInterest.plus(m);
 			count++;
-			console.log("Month #" + count + " Principal: "+p.valueOf());
+			//console.log("Month #" + count + " Principal: "+p.valueOf());
 		}	
 	}
 	totalInterest = totalInterest.minus(pTemp);
@@ -109,26 +110,28 @@ function calculateLoan(p,i,t,m,c)
 	else
 		employeeCost = costOfLoan;
 	
-	console.log("Payment count = " + count);
+	/* console.log("Payment count = " + count);
 	console.log("Interest paid = " + totalInterest.valueOf());
 	console.log("Cost of Loan = " + costOfLoan.valueOf());
-	console.log("Employee cost = " + employeeCost.valueOf());
+	console.log("Employee cost = " + employeeCost.valueOf()); */
 	
-	// var woTotalInterest = (m.times((t.times(12)))).minus(pTemp);
-	// var woCostOfLoan = (m.times((t.times(12))));
-	// var woEmployee = (m.times((t.times(12))));
-	// var woCount = (t.times(12));
-	// var woTime = 0;
-	// var timeSaved = ""+Math.round(((t.times(12)).minus(count)).div(12)) + " yr(s)" + (((t.times(12)).minus(count)).div(12)).mod(12).toFixed(0) + " month(s)";
-	// var arr = [ pTemp, totalInterest, costOfLoan, employeeCost, count, timeSaved];
-	// insertToTable(arr);
+	var woTotalInterest = (m.times((t.times(12)))).minus(pTemp);
+	var woCostOfLoan = (m.times((t.times(12))));
+	var woEmployee = (m.times((t.times(12))));
+	var woCount = (t.times(12));
+	var woTime = 0;
+	var timeSaved = ""+Math.round(((t.times(12)).minus(count)).div(12)) + " yr(s) " + "and " + (((t.times(12)).minus(count)).div(12)).mod(12).toFixed(0) + " month(s)";
+	var arrWithContributions = [ pTemp, totalInterest, costOfLoan, employeeCost, count, timeSaved];
+	var arrWithoutContributions = [ pTemp, woTotalInterest, woCostOfLoan, woEmployee, woCount, woTime];
+	insertToTable(arrWithContributions, 2);
+	insertToTable(arrWithoutContributions, 1);
 	
 	//remove the labels and datas
 	barChartData.data.labels.splice(0, barChartData.data.labels.length);
 	barChartData.data.datasets[0].data.splice(0, barChartData.data.datasets[0].data.length);
 	barChartData.data.datasets[1].data.splice(0, barChartData.data.datasets[1].data.length);
 	//add the labels
-	for(time = 0; time < t; time++)
+	for(time = 0; time <= t.plus(1); time++)
 	{
 		var x = (time+2017).toString();
 		barChartData.data.labels.push(x);
@@ -137,7 +140,7 @@ function calculateLoan(p,i,t,m,c)
 	//add the data to dataset 1
 	for(data1 = 0; data1 < withCont.length; data1++)
 	{
-		console.log("Data1: " + withCont[data1]);
+		//console.log("Data1: " + withCont[data1]);
 		barChartData.data.datasets[1].data.push(withCont[data1]);
 	}
 	
@@ -145,7 +148,7 @@ function calculateLoan(p,i,t,m,c)
 	var withoutCont = calcWithoutCont(m,t,i,pTemp);
 	for(data2 = 0; data2 < withoutCont.length; data2++)
 	{
-		console.log("Data2: " + withoutCont[data2]);
+		//console.log("Data2: " + withoutCont[data2]);
 		barChartData.data.datasets[0].data.push(withoutCont[data2]);
 	}
 	//update chart
@@ -153,30 +156,38 @@ function calculateLoan(p,i,t,m,c)
 	new Chart(ctx, barChartData);
 }
 
-function insertToTable(array)
+function insertToTable(array, row)
 {
 	var table = document.getElementById('chartTable');
-	for( i = 0; i <= array.length; i++)
+	if( row == 1 )
+		table.rows[row]
+	for( i = 0; i < array.length; i++)
 	{
 		if(i == 4)
-			table.rows[2].cells[i+1].innerHTML = array[i];
+			table.rows[row].cells[i+1].innerHTML = array[i];
 		else if(i == 5)
-			table.rows[2].cells[i+1].innerHTML = array[i];
+			table.rows[row].cells[i+1].innerHTML = array[i];
 		else
-			table.rows[2].cells[i+1].innerHTML = ("$" + Math.round(array[i]));
+			table.rows[row].cells[i+1].innerHTML = ("$" + Math.round(array[i]));
 	}
 }
 
 function calcWithoutCont(m,t,i,p)
 {
 	var res = [];
-	for( k = 0; k < (t.times(12)); k++)
+	var count = (t.times(12));
+	for( k = 0; k < count; k++)
 	{
-		
 		x = new Big( (p.times(i)).div(12) );
 		p = new Big((p).minus( (m).minus(x))); 
-		if(k % 11 == 0)
+		if(k == count-1)
 		{
+			console.log("K="+k+"p.valueOf()="+p.valueOf());
+			res.push(Big(0));
+		}
+		else if(k % 11 == 0)
+		{
+			console.log("K="+k+"p.valueOf()="+p.valueOf());
 			res.push(p.valueOf());
 		}
 	}
