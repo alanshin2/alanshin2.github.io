@@ -27,6 +27,20 @@ var barChartData = {
 		legend: {
 			position: 'top',
 		},
+		scales: {
+			yAxes: [{
+			  scaleLabel: {
+				display: true,
+				labelString: 'Total Loan Cost Remaining'
+			  }
+			}],
+			xAxes: [{
+			  scaleLabel: {
+				display: true,
+				labelString: 'Term Year'
+			  }
+			}]
+		},     
 	}
 };
 window.onload = function() {
@@ -120,7 +134,7 @@ function calculateLoan(p,i,t,m,c,cc)
 	var woEmployee = (m.times((t.times(12))));
 	var woCount = (t.times(12));
 	var woTime = 0;
-	var timeSaved = ""+Math.round(((t.times(12)).minus(count)).div(12)) + " yr(s) " + "and " + (((t.times(12)).minus(count)).div(12)).mod(12).toFixed(0) + " month(s)";
+	var timeSaved = ""+Math.round(((t.times(12)).minus(count)).div(12)) + " yr(s) " + "and " + (((t.times(12)).minus(count)).mod(12)).toFixed(0) + " month(s)";
 	var arrWithContributions = [ pTemp, totalInterest, costOfLoan, employeeCost, count, timeSaved];
 	var arrWithoutContributions = [ pTemp, woTotalInterest, woCostOfLoan, woEmployee, woCount, woTime];
 	insertToTable(arrWithContributions, 2);
@@ -168,10 +182,12 @@ function insertToTable(array, row)
 		else if(i == 5)
 			table.rows[row].cells[i+1].innerHTML = array[i];
 		else
-			table.rows[row].cells[i+1].innerHTML = ("$" + Math.round(array[i]));
+			table.rows[row].cells[i+1].innerHTML = ("$" + numberWithCommas(Math.round(array[i])));
 	}
 }
-
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 function calcWithoutCont(m,t,i,p)
 {
 	var res = [];

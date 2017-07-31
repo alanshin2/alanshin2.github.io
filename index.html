@@ -8,57 +8,62 @@
 			table, th, td {
 				border: 1px solid black;
 				border-collapse: collapse;
+				
 			}
 			td {
 				text-align:center; 
 				vertical-align:middle;
 			}
-			.withoutTR {
-				background-color: '#87f299';
+			div.divtable {
+				padding-top: 1cm;
 			}
 		</style>
 	</head>
 	
 	<body>
 		<div class="content">
-			<section id="chart">
-				<b>Principal ($): </b></br><input type="text" id="principal_input" name="Principal" value="30000" oninput="updateChart()"></br>
-				<b>Interest (%): </b></br><input type="text" id="interest_input" name="Interest" value="6"oninput="updateChart()"></br>
-				<b>Time (years): </b></br><input type="text" id="time_input" name="Time" value="21"oninput="updateChart()"></br>
-				<b>Contributions/month ($): </b></br><input type="text" id="cont_input" name="Contribution" value="100"oninput="updateChart()"></br>
-				<b>Total Contributions ($): </br><input type="text" id="cap_input" name="Cap" value="6000"oninput="updateChart()"></br>
-				<div style="width:55%;">
-					<canvas id="myChart"></canvas>
-			</section>
-			<table id="chartTable" style="width:50%">
-				<tr>
-					<th></th>
-					<th>Principal Balance</th>
-					<th>Interest Paid</th>
-					<th>Total Cost of Loan</th>
-					<th>Cost to Employee</th>
-					<th>Number of Payments</th>
-					<th>Time saved</th>
-				</tr>
-				<tr bgcolor="#f99690">
-					<td>Without Contributions</td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
-				<tr bgcolor="#87f299">
-					<td>With Contributions</td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
-			</table>
+				<div id="chart" style="float: left; width: 15%">
+					<b>Principal ($): </b></br><input type="text" id="principal_input" name="Principal" value="30000" oninput="updateChart()"></br>
+					<b>Interest (%): </b></br><input type="text" id="interest_input" name="Interest" value="6"oninput="updateChart()"></br>
+					<b>Time (years): </b></br><input type="text" id="time_input" name="Time" value="21"oninput="updateChart()"></br>
+					<b>Contributions/month ($): </b></br><input type="text" id="cont_input" name="Contribution" value="100"oninput="updateChart()"></br>
+					<b>Total Contributions ($): </br><input type="text" id="cap_input" name="Cap" value="6000"oninput="updateChart()"></br>
+				</div>
+				<div class="divtable" style="float: left; width: 45%">
+					<table id="chartTable" style="width:85%">
+						<tr>
+							<th></th>
+							<th>Principal Balance</th>
+							<th>Interest Paid</th>
+							<th>Total Cost of Loan</th>
+							<th>Cost to Employee</th>
+							<th>Number of Payments</th>
+							<th>Time saved</th>
+						</tr>
+						<tr bgcolor="#f99690">
+							<td>Without Contributions</td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr bgcolor="#87f299">
+							<td>With Contributions</td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+					</table>
+				</div>
+					<div style="width:55%;">
+						<canvas id="myChart"></canvas>
+				
+			</br>
 		</div>
 	</body>
 	<script src="script.js"></script>
