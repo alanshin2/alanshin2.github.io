@@ -95,6 +95,8 @@ function calculateLoan(p,i,t,m,c,cc)
 					p = new Big(p.minus((y).minus(x)));
 					totalInterest = totalInterest.plus( (m.plus(c)) );
 					count++;
+					if(p.valueOf() < 0)
+						p = new Big(0);
 					//console.log("Month #" + count + " Principal: "+p.valueOf() +"in loop");
 					if(count%11 == 0)
 						withCont.push(p.valueOf());
