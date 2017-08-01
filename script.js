@@ -85,6 +85,7 @@ function calculateLoan(p,i,t,m,c,cc)
 			{
 				if( p.valueOf() < 0)
 				{
+					p = new Big(0);
 					break;
 					
 				}
