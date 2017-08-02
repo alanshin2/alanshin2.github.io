@@ -1,5 +1,5 @@
-
-var YEARS = 2017;
+var tb = document.getElementById('amorWithContTable').getElementsByTagName('tbody')[0];
+// Dataset information about the chart
 var barChartData = {
 	type: 'bar',
 	data: {
@@ -43,12 +43,15 @@ var barChartData = {
 		},     
 	}
 };
+
+// Update chart when the website first loads
 window.onload = function() {
 	var ctx = document.getElementById("myChart").getContext("2d");
 	new Chart(ctx, barChartData);
 	updateChart();
 };
 
+// First function entered when values change in the input boxes
 function updateChart()
 {
 	p = new Big(document.getElementById("principal_input").value);
@@ -61,14 +64,34 @@ function updateChart()
 	i = i.div(100);
 	
 	m = new Big(calculateMonthly(p, i ,t));
-	//console.log((m.times(120)).valueOf());
+	while(tb.rows.length > 0) {
+	  tb.deleteRow(0);
+	}
 	calculateLoan(p,i,t,m,c,cc);
 	
 }
 
+function insertRow(month,cont,pay,intrst,prin,loan)
+{
+	var newRow = tb.insertRow(tb.rows.length);
+	for(y = 0; y < 6; y++)
+	{
+		newRow.insertCell(y);
+	}
+	newRow.cells[0].innerHTML = month;
+	newRow.cells[1].innerHTML = "$"+numberWithCommas(Math.round(cont));
+	newRow.cells[2].innerHTML = "$"+numberWithCommas(Math.round(prin));
+	newRow.cells[3].innerHTML = "$"+numberWithCommas(Math.round(intrst));
+	newRow.cells[4].innerHTML = "$"+numberWithCommas(Math.round(pay));
+	newRow.cells[5].innerHTML = "$"+numberWithCommas(Math.round(loan));
+}
+
+// Calculates both the with/without and stores data to table and graph chart.
 function calculateLoan(p,i,t,m,c,cc)
 {
 	var withCont=[];
+	var tb = document.getElementById('amorWithContTable').getElementsByTagName('tbody')[0];
+	
 	totalInterest = new Big(0);
 	costOfLoan = new Big(0);
 	employeeCost = new Big(0);
@@ -79,15 +102,18 @@ function calculateLoan(p,i,t,m,c,cc)
 		run = true;
 	while(p.valueOf() > 0)
 	{
+		temp = new Big(p);
+		
 		if( run == true )
 		{
 			for(j = 0; j < (cc/c); j++)
 			{
-				if( p.valueOf() < 0)
+				if( p.valueOf() < 0.01)
 				{
 					p = new Big(0);
+					run = false;
+					c = new Big(0);
 					break;
-					
 				}
 				else
 				{
@@ -98,14 +124,17 @@ function calculateLoan(p,i,t,m,c,cc)
 					count++;
 					if(p.valueOf() < 0)
 						p = new Big(0);
-					//console.log("Month #" + count + " Principal: "+p.valueOf() +"in loop");
+					insertRow(count,c,(y).minus(x),(p.times(i)).div(12),(c.plus((m.plus(((p.times(i)).div(12)))))).minus((p.times(i)).div(12)),p.valueOf());
+					console.log("L Month #" + count + " Principal "+temp+"-Payment: ("+c.plus((m.plus(((p.times(i)).div(12)))))+") "+"="+p.valueOf());
+					//console.log("LMonth #" + count + " Principal "+temp+"-Payment: ("+c+"+"+m+"-"+(((p.times(i)).div(12))+") "+"="+p.valueOf())); //Principal: "+p.valueOf() + " monthly " + y.valueOf() + " in loop");
 					if(count%11 == 0)
 						withCont.push(p.valueOf());
 				}	
 			}
+			run = false;
+			c = new Big(0);
 		}
-		run = false;
-		if( p.valueOf() > 0 )
+		else if( p.valueOf() > 0 )
 		{
 			x = new Big( (p.times(i)).div(12) );
 			p = new Big((p).minus( (m).minus(x)));
@@ -117,15 +146,24 @@ function calculateLoan(p,i,t,m,c,cc)
 				withCont.push(p.valueOf());
 			totalInterest = totalInterest.plus(m);
 			count++;
-			//console.log("Month #" + count + " Principal: "+p.valueOf());
+			insertRow(count,0,m.minus(x),(p.times(i)).div(12),(m.plus(((p.times(i)).div(12)))).minus((p.times(i)).div(12)),p.valueOf());
+			console.log("Month #" + count + " Principal "+temp+"-Payment: ("+m.plus(((p.times(i)).div(12)))+") "+"="+p.valueOf());
+			//console.log("Month #" + count + " Principal "+temp+"-Payment: ("+m+"-"+(((p.times(i)).div(12))+") "+"="+p.valueOf()));
+			//console.log("Month #" + count + " Principal: "+p.valueOf()+ " monthly " + y.valueOf());
 		}	
 	}
 	totalInterest = totalInterest.minus(pTemp);
 	costOfLoan = pTemp.plus(totalInterest);
 	if (c > 0)
+	{
 		employeeCost = costOfLoan.minus(6000);
+	}
 	else
+	{
 		employeeCost = costOfLoan;
+		if(employeeCost < 0)
+			employeeCost = 0;
+	}
 	
 	/* console.log("Payment count = " + count);
 	console.log("Interest paid = " + totalInterest.valueOf());
@@ -137,7 +175,13 @@ function calculateLoan(p,i,t,m,c,cc)
 	var woEmployee = (m.times((t.times(12))));
 	var woCount = (t.times(12));
 	var woTime = 0;
-	var timeSaved = ""+Math.round(((t.times(12)).minus(count)).div(12)) + " yr(s) " + "and " + (((t.times(12)).minus(count)).mod(12)).toFixed(0) + " month(s)";
+	var timeSavedYears = Math.round(((t.times(12)).minus(count)).div(12));
+	var timeSavedMonths = (((t.times(12)).minus(count)).mod(12)).toFixed(0);
+	if (timeSavedYears < 0)
+		timeSavedYears = 0;
+	if (timeSavedMonths < 0)
+		timeSavedMonths = 0;
+	var timeSaved = ""+timeSavedYears + " yr(s) " + "and " + timeSavedMonths + " month(s)";
 	var arrWithContributions = [ pTemp, totalInterest, costOfLoan, employeeCost, count, timeSaved];
 	var arrWithoutContributions = [ pTemp, woTotalInterest, woCostOfLoan, woEmployee, woCount, woTime];
 	insertToTable(arrWithContributions, 2);
@@ -168,11 +212,13 @@ function calculateLoan(p,i,t,m,c,cc)
 		//console.log("Data2: " + withoutCont[data2]);
 		barChartData.data.datasets[0].data.push(withoutCont[data2]);
 	}
+
 	//update chart
 	var ctx = document.getElementById("myChart").getContext("2d");
 	new Chart(ctx, barChartData);
 }
 
+// Insert values to the with/without table
 function insertToTable(array, row)
 {
 	var table = document.getElementById('chartTable');
@@ -188,9 +234,13 @@ function insertToTable(array, row)
 			table.rows[row].cells[i+1].innerHTML = ("$" + numberWithCommas(Math.round(array[i])));
 	}
 }
+
+// Edits digits to display correct comma placement
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
+
+// Calculate the principal balance per month and return array
 function calcWithoutCont(m,t,i,p)
 {
 	var res = [];
@@ -201,18 +251,19 @@ function calcWithoutCont(m,t,i,p)
 		p = new Big((p).minus( (m).minus(x))); 
 		if(k == count-1)
 		{
-			console.log("K="+k+"p.valueOf()="+p.valueOf());
+			//console.log("K="+k+"p.valueOf()="+p.valueOf());
 			res.push(Big(0));
 		}
 		else if(k % 11 == 0)
 		{
-			console.log("K="+k+"p.valueOf()="+p.valueOf());
+			//console.log("K="+k+"p.valueOf()="+p.valueOf());
 			res.push(p.valueOf());
 		}
 	}
 	return res;
 }
 
+// Calculate the cost per month
 function calculateMonthly(p,i,t)
 {
 								// (p * (i / 12)

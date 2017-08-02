@@ -17,19 +17,59 @@
 			div.divtable {
 				padding-top: 1cm;
 			}
+			div.amorDiv {
+				padding-top: 1cm;
+			}
+			button.collapsable {
+				background-color: #eee;
+				cursor: pointer;
+				padding: 10px;
+				width: 50%;
+				border: none;
+				text-align: left;
+				transition: 0.5s;
+			}
+			button.collapsable.active, button.collapsable:hover {
+				background-color: #8eb2ed;
+			}
+			
+			div.panel{
+				padding: 0 18px;
+				background-color: white;
+				max-height: 0;
+				overflow: hidden;
+				transition: max-height 0.2s ease-out;
+			}
+			#amorWithContTable td, #amorWithContTable th {
+				border: 1px solid #ddd;
+				padding: 8px;
+			}
+			
+			#amorWithContTable tr:nth-child(even){background-color: #f2f2f2;}
+			#amorWithContTable tr:hover {background-color: #ddd;}
+			#amorWithContTable th {
+				padding-top: 12px;
+				padding-bottom: 12px;
+				text-align: left;
+				background-color: #31477c;
+				color: white;
+			}
 		</style>
 	</head>
 	
 	<body>
 		<div class="content">
-				<div id="chart" style="float: left; width: 15%">
-					<b>Principal ($): </b></br><input type="text" id="principal_input" name="Principal" value="0" oninput="updateChart()"></br>
-					<b>Interest (%): </b></br><input type="text" id="interest_input" name="Interest" value="0"oninput="updateChart()"></br>
-					<b>Time (years): </b></br><input type="text" id="time_input" name="Time" value="0"oninput="updateChart()"></br>
-					<b>Contributions/month ($): </b></br><input type="text" id="cont_input" name="Contribution" value="0"oninput="updateChart()"></br>
-					<b>Total Contributions ($): </br><input type="text" id="cap_input" name="Cap" value="0"oninput="updateChart()"></br>
+				<div id="chart">
+					<b>Principal ($): </b></br><input type="text" id="principal_input" name="Principal" value="30000" oninput="updateChart()"></br>
+					<b>Interest (%): </b></br><input type="text" id="interest_input" name="Interest" value="6"oninput="updateChart()"></br>
+					<b>Time (years): </b></br><input type="text" id="time_input" name="Time" value="21"oninput="updateChart()"></br>
+					<b>Contributions/month ($): </b></br><input type="text" id="cont_input" name="Contribution" value="100"oninput="updateChart()"></br>
+					<b>Total Contributions ($): </br><input type="text" id="cap_input" name="Cap" value="6000"oninput="updateChart()"></br>
 				</div>
-				<div class="divtable" style="float: left; width: 45%">
+				<div style="width:55%;">
+						<canvas id="myChart"></canvas>
+				
+				<div class="divtable" >
 					<table id="chartTable" style="width:85%">
 						<tr>
 							<th></th>
@@ -60,9 +100,24 @@
 						</tr>
 					</table>
 				</div>
-					<div style="width:55%;">
-						<canvas id="myChart"></canvas>
 				
+				<div class="amorDiv">
+					<h3>Amortization Table for WITH Contributions</h3>
+					<table id="amorWithContTable">
+						<thead>
+							<tr>
+								<th>Month</th>
+								<th>Contributions</th>
+								<th>Total Payment</th>
+								<th>Payment Towards Interest</th>
+								<th>Payment Towards Balance</th>
+								<th>Loan Balance</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+				</div>
 			</br>
 		</div>
 	</body>
